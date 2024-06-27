@@ -8,7 +8,7 @@ export default function layout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<div>
+		<div className="bg-slate-50 h-screen">
 			<div className="md:w-64 hidden md:block fixed">
 				<SideNav />
 			</div>
