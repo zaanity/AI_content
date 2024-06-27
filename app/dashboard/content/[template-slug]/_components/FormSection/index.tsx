@@ -6,15 +6,18 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import React, { useState } from "react";
 import { FormData } from "../../page";
+import { Loader2Icon } from "lucide-react";
 
 type FormSectionProps = {
 	selectedTemplate?: Template;
 	userFormInput: (formData: FormData) => void;
+	loading: boolean;
 };
 
 export default function FormSection({
 	selectedTemplate,
 	userFormInput,
+	loading,
 }: FormSectionProps) {
 	const [formData, setFormData] = useState<FormData>({
 		niche: "",
@@ -71,8 +74,16 @@ export default function FormSection({
 						</div>
 					);
 				})}
-				<Button type="submit" className="w-full py-6">
-					Generate Content
+				<Button
+					type="submit"
+					className="w-full py-6"
+					disabled={loading}
+				>
+					{loading ? (
+						<Loader2Icon className="animate-spin" />
+					) : (
+						"Generate Content"
+					)}
 				</Button>
 			</form>
 		</div>

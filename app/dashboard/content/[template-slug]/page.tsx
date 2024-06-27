@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import FormSection from "./_components/FormSection";
 import OutputSection from "./_components/OutputSection";
 import { Template } from "../../_components/TemplateListSection";
@@ -7,6 +7,7 @@ import Templates from "@/app/(data)/Templates";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { chatSession } from "@/utils/AiModal";
 
 type Props = {
 	params: {
@@ -23,8 +24,38 @@ export default function CreateNewContent(props: Props) {
 	const selectedTemplate: Template | undefined = Templates?.find(
 		(item) => item.slug === props.params["template-slug"]
 	);
+	const [loading, setLoading] = useState(false);
+	const [aiOutput, setAiOutput] = useState<string>("");
 
-	const GenerateAIContent = (formData: FormData) => {};
+	const GenerateAIContent = async (formData: FormData) => {
+		setLoading(true);
+		const SelectedPrompt = selectedTemplate?.aiPrompt;
+
+		if (!formData || !SelectedPrompt) {
+			console.error(
+				"Données du formulaire ou prompt sélectionné manquants"
+			);
+			setLoading(false);
+			return;
+		}
+
+		const FinalAIPrompt = `${JSON.stringify(formData)} , ${SelectedPrompt}`;
+
+		try {
+			const result = await chatSession.sendMessage(FinalAIPrompt);
+
+			const responseText = await result.response.text();
+			console.log(responseText);
+			setAiOutput(responseText);
+		} catch (error) {
+			console.error("Erreur lors de l'appel à l'API :", error);
+			setAiOutput(
+				"Une erreur est survenue lors de la génération du contenu."
+			);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	return (
 		<div className="p-5">
@@ -40,9 +71,10 @@ export default function CreateNewContent(props: Props) {
 					userFormInput={(v: FormData) => {
 						GenerateAIContent(v), console.log("v", v);
 					}}
+					loading={loading}
 				/>
 				<div className="lg:col-span-2">
-					<OutputSection />
+					<OutputSection aiOutput={aiOutput} />
 				</div>
 			</div>
 		</div>
