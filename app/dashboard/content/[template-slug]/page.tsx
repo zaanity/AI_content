@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { chatSession } from "@/utils/AiModal";
+import { db } from "@/utils/Backend/db";
+import { aiOutput as aiOutputSchema } from "@/utils/Backend/Schema";
+import { useUser } from "@clerk/nextjs";
 
 type Props = {
 	params: {
@@ -26,6 +29,7 @@ export default function CreateNewContent(props: Props) {
 	);
 	const [loading, setLoading] = useState(false);
 	const [aiOutput, setAiOutput] = useState<string>("");
+	const { user } = useUser();
 
 	const GenerateAIContent = async (formData: FormData) => {
 		setLoading(true);
@@ -47,6 +51,11 @@ export default function CreateNewContent(props: Props) {
 			const responseText = await result.response.text();
 			console.log(responseText);
 			setAiOutput(responseText);
+			await saveInDB(
+				formData,
+				selectedTemplate?.slug,
+				result.response.text()
+			);
 		} catch (error) {
 			console.error("Erreur lors de l'appel à l'API :", error);
 			setAiOutput(
@@ -54,6 +63,36 @@ export default function CreateNewContent(props: Props) {
 			);
 		} finally {
 			setLoading(false);
+		}
+	};
+
+	const saveInDB = async (
+		formData: FormData,
+		slug: string,
+		aiRes: string
+	) => {
+		const currentDate = new Date();
+		const formattedDate = `${currentDate
+			.getDate()
+			.toString()
+			.padStart(2, "0")}/${(currentDate.getMonth() + 1)
+			.toString()
+			.padStart(2, "0")}/${currentDate.getFullYear()}`;
+
+		try {
+			const result = await db.insert(aiOutputSchema).values({
+				formData: JSON.stringify(formData),
+				templateSlug: slug,
+				aiResponse: aiRes,
+				createBy: user?.primaryEmailAddress?.emailAddress || "",
+				createAt: formattedDate,
+			});
+			console.log("result", result);
+		} catch (error) {
+			console.error(
+				"Erreur lors de l'insertion dans la base de données :",
+				error
+			);
 		}
 	};
 
@@ -69,7 +108,8 @@ export default function CreateNewContent(props: Props) {
 				<FormSection
 					selectedTemplate={selectedTemplate}
 					userFormInput={(v: FormData) => {
-						GenerateAIContent(v), console.log("v", v);
+						GenerateAIContent(v);
+						console.log("v", v);
 					}}
 					loading={loading}
 				/>
