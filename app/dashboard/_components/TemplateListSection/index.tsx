@@ -43,7 +43,7 @@ export default function TemplateListSection({
 	return (
 		<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-10">
 			{TemplateList.map((item: Template) => {
-				return <TemplateCard {...item} />;
+				return <TemplateCard {...item} key={item.id} />;
 			})}
 		</div>
 	);
