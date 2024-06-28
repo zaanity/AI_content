@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { handleCopyClick } from "@/utils/handleCopyClick";
 import { Copy } from "lucide-react";
 import React, { useEffect, useRef } from "react";
 require("@toast-ui/editor/dist/toastui-editor.css");
@@ -20,7 +21,10 @@ export default function OutputSection({ aiOutput }: OutputSectionProps) {
 		<div className="bg-white shadow-lg border rounded-lg">
 			<div className="flex justify-between items-center p-5">
 				<h2 className="font-medium text-lg">Your Result</h2>
-				<Button className="flex gap-2 items-center">
+				<Button
+					className="flex gap-2 items-center"
+					onClick={() => handleCopyClick(aiOutput)}
+				>
 					<Copy className="w-4 h-4" /> Copy
 				</Button>
 			</div>
