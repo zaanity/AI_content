@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import FormSection from "./_components/FormSection";
 import OutputSection from "./_components/OutputSection";
 import { Template } from "../../_components/TemplateListSection";
@@ -11,6 +11,8 @@ import { chatSession } from "@/utils/AiModal";
 import { db } from "@/utils/Backend/db";
 import { aiOutput as aiOutputSchema } from "@/utils/Backend/Schema";
 import { useUser } from "@clerk/nextjs";
+import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
+import { useRouter } from "next/navigation";
 
 type Props = {
 	params: {
@@ -29,9 +31,15 @@ export default function CreateNewContent(props: Props) {
 	);
 	const [loading, setLoading] = useState(false);
 	const [aiOutput, setAiOutput] = useState<string>("");
+	const router = useRouter();
 	const { user } = useUser();
+	const { totalUsage, setTotalUsage } = useContext(TotalUsageContext);
 
 	const GenerateAIContent = async (formData: FormData) => {
+		if (totalUsage >= 10000) {
+			router.push("dashboard/billing");
+			return;
+		}
 		setLoading(true);
 		const SelectedPrompt = selectedTemplate?.aiPrompt;
 

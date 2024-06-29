@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
+import { UsageTrack } from "../UsageTrack";
 
 export default function SideNav() {
 	const MenuList = [
@@ -39,12 +40,13 @@ export default function SideNav() {
 	// }, []);
 
 	return (
-		<div className="h-screen p-5 shadow-sm border bg-white">
+		<div className="h-screen p-5 relative shadow-sm border bg-white">
 			<div className="flex justify-center">
 				<Image src={"/logo.svg"} alt="logo" width={120} height={100} />
 			</div>
 
 			<hr className="my-6 border" />
+
 			<div className="mt-3">
 				{MenuList.map((menu) => {
 					return (
@@ -62,6 +64,9 @@ export default function SideNav() {
 						</Link>
 					);
 				})}
+			</div>
+			<div className="absolute bottom-10 left-0 w-full">
+				<UsageTrack />
 			</div>
 		</div>
 	);
