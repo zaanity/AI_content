@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { aiOutput } from "@/utils/Backend/Schema";
 import { db } from "@/utils/Backend/db";
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
 import { handleCopyClick } from "@/utils/handleCopyClick";
 
@@ -43,7 +43,7 @@ export default function History() {
 					})
 					.from(aiOutput)
 					.where(eq(aiOutput.createBy, emailAddress))
-					.orderBy(desc(aiOutput.createAt))
+					.orderBy(asc(aiOutput.createAt))
 					.execute();
 
 				const dataWithWordsLength = result.map((item) => ({

@@ -59,9 +59,9 @@ export function UsageTrack() {
 					{totalUsage}/10,000 Credits used
 				</h2>
 			</div>
-			<Button variant="secondary" className="w-full my-3 text-primary">
+			{/* <Button variant="secondary" className="w-full my-3 text-primary">
 				Upgrade
-			</Button>
+			</Button> */}
 		</div>
 	);
 }

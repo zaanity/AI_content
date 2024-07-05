@@ -1,7 +1,12 @@
 import { Search } from "lucide-react";
 import React from "react";
 
-export default function SearchSection({ onSearchInput }: any) {
+type SearchSectionProps = {
+	onSearchInput: (value: string) => void;
+};
+
+export default function SearchSection({ onSearchInput }: SearchSectionProps) {
+	console.log("onSearchInput", onSearchInput);
 	return (
 		<div className="p-10 bg-gradient-to-br from-purple-500 via-purple-700 to-blue-600 flex flex-col justify-center items-center text-white">
 			<h2 className="text-3xl font-bold">Browse All Templates</h2>
