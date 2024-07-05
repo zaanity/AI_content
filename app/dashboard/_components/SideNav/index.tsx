@@ -40,7 +40,7 @@ export default function SideNav() {
 	// }, []);
 
 	return (
-		<div className="h-screen p-5 relative shadow-sm border bg-white">
+		<div className="h-screen p-5 relative shadow-sm border bg-white z-10 w-[300px] md:w-full">
 			<div className="flex justify-center">
 				<Image src={"/logo.svg"} alt="logo" width={120} height={100} />
 			</div>
